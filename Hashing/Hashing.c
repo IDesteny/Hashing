@@ -647,8 +647,9 @@ WndProc(
 
 					free(arrayKeys);
 
+					DOUBLE allCompsS[2];
 					for (UINT64 iter = 0; iter < 2; ++iter)
-						allComps[iter] /= hashTableLength;
+						allCompsS[iter] = (DOUBLE)allComps[iter] / hashTableLength;
 
 					DeleteChains(lpArrlppNode);
 					DeleteArray(lpArray);
@@ -662,8 +663,8 @@ WndProc(
 						CONST INT iResult_stprintf_s
 							= _stprintf_s(
 								outputBuffer, IOBUFFER,
-								_T("%I64u - %I64u - %I64u"),
-								times[iter], allComps[iter], found[iter]);
+								_T("%I64u %.1f %I64u"),
+								times[iter], allCompsS[iter], found[iter]);
 						if (iResult_stprintf_s <= FALSE)
 							return EXIT_FAILURE;
 
