@@ -332,14 +332,18 @@ FindChains(
 	if (hashFunction == NULL)
 		hashFunction = *hashFunctions;
 
+	if (comparisons == NULL)
+		return FALSE;
+
+	++ *comparisons;
+
 	for (
 		REGISTER LPNODE iter
 		= lpArrlppNode->lppNodes[hashFunction(keyValue, lpArrlppNode->length)];
 		iter != NULL;
 		iter = iter->nextNode)
 	{
-		if (comparisons != NULL)
-			++ *comparisons;
+		++ *comparisons;
 
 		if (iter->key == keyValue)
 			return TRUE;
@@ -359,30 +363,33 @@ FindArray(
 			_In_ REGISTER CONST UINT64),
 	_Out_opt_ REGISTER PUINT64 comparisons)
 {
+	if (comparisons == NULL)
+		return FALSE;
+
 	if (hashFunction == NULL)
 		hashFunction = *hashFunctions;
 
 	REGISTER CONST UINT64 h = hashFunction(keyValue, lpArray->length);
+	REGISTER UINT64 iter = h;
 
-	for (
-		REGISTER UINT64 iter = h;
+	++ *comparisons;
+
+	for (;	
 		iter < lpArray->length && lpArray->data[iter] != -1;
 		++iter)
 	{
-		if (comparisons != NULL)
-			++ *comparisons;
+		++ *comparisons;
 
 		if (lpArray->data[iter] == keyValue)
 			return TRUE;
 	}
 
 	for (
-		REGISTER UINT64 iter = 0;
+		iter = 0;
 		iter < h && lpArray->data[iter] != -1;
 		++iter)
 	{
-		if (comparisons != NULL)
-			++ *comparisons;
+		++ *comparisons;
 
 		if (lpArray->data[iter] == keyValue)
 			return TRUE;
@@ -663,7 +670,7 @@ WndProc(
 						CONST INT iResult_stprintf_s
 							= _stprintf_s(
 								outputBuffer, IOBUFFER,
-								_T("%I64u %.1f %I64u"),
+								_T("%I64u %.2f %I64u"),
 								times[iter], allCompsS[iter], found[iter]);
 						if (iResult_stprintf_s <= FALSE)
 							return EXIT_FAILURE;
